@@ -1,5 +1,6 @@
 package com.example.tugas_search_2.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.example.tugas_search_2.data.response.ItemsItem
@@ -61,9 +61,9 @@ class FollowersFragment : Fragment() {
 
     }
 
-    private fun findFollower(username: String) {
+    private fun findFollower(username: String?, context: Context?) {
 
-        val client = ApiConfig.getApiService().getFollowers(username= username)
+        val client = ApiConfig.getApiService().getFollowers(username= username!!)
         client.enqueue(object : Callback<List<ItemsItem>> {
             override fun onResponse(
                 call: Call<List<ItemsItem>>,
@@ -74,7 +74,7 @@ class FollowersFragment : Fragment() {
                     val responseBody = response.body()
                     if (responseBody != null) {
 
-                        setUserData(responseBody)
+                        setUserData(responseBody, context)
                     }
                 } else {
 
@@ -87,10 +87,10 @@ class FollowersFragment : Fragment() {
     }
 
     private var dataUsers: List<ItemsItem?>? = null
-    private fun setUserData(itemUser: List<ItemsItem>) {
-        val adapter = SectionsPagerAdapter(AppCompatActivity())
-//        adapter.submitList(itemUser)
-//        binding.rvReview.adapter = adapter
+    private fun setUserData(itemUser: List<ItemsItem>, context: Context?) {
+        val adapter = ListFollowerAdapter( itemUser, requireContext())
+        adapter.submitList(itemUser)
+        binding.rvFollower.adapter = adapter
         dataUsers = itemUser
     }
 
@@ -103,6 +103,8 @@ class FollowersFragment : Fragment() {
             position = it.getInt(ARG_POSITION)
             username = it.getString(ARG_USERNAME)
         }
+
+        findFollower(username, context)
 //        if (position == 1){
 //            binding.textFollower.text= "Get Follower $username"
 //        } else {
@@ -114,7 +116,7 @@ class FollowersFragment : Fragment() {
 
     companion object {
         const val ARG_POSITION = "app_name"
-        const val ARG_USERNAME = "app_name"
+        const val ARG_USERNAME = "username"
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ItemsItem>() {
             override fun areItemsTheSame(oldItem: ItemsItem, newItem: ItemsItem): Boolean {
                 return oldItem == newItem

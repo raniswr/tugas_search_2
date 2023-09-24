@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.tugas_search_2.data.response.ItemsItem
 import com.example.tugas_search_2.databinding.ItemFollowersBinding
 
-class SectionsPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
+class SectionsPagerAdapter(activity: AppCompatActivity, private val username: String) : FragmentStateAdapter(activity) {
 
     var appName: String = "haloo"
 
@@ -23,7 +23,7 @@ class SectionsPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(a
         val fragment = FollowersFragment()
         fragment.arguments = Bundle().apply {
             putInt(FollowersFragment.ARG_POSITION, position + 1)
-            putString(FollowersFragment.ARG_USERNAME, appName)
+            putString(FollowersFragment.ARG_USERNAME, username)
         }
         return fragment
     }

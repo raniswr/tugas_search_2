@@ -9,13 +9,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.tugas_search_2.R
 import com.example.tugas_search_2.data.response.ItemsItem
-import com.example.tugas_search_2.data.retrofit.ApiConfig
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class profile_page : AppCompatActivity() {
@@ -29,7 +25,8 @@ class profile_page : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_page)
-        val sectionsPagerAdapter = SectionsPagerAdapter(this)
+        var getData = Gson().fromJson(intent?.extras?.getString("detailUser"), ItemsItem::class.java)
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, getData.login)
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
@@ -43,7 +40,7 @@ class profile_page : AppCompatActivity() {
 
 
 
-        var getData = Gson().fromJson(intent?.extras?.getString("detailUser"), ItemsItem::class.java)
+
 
         if (getData != null) {
             val detailTitle: TextView = findViewById(R.id.detailTitle)
