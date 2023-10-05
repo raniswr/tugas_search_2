@@ -39,29 +39,27 @@ class FollowersFragment : Fragment() {
     private var username: String? = null
 
     private var _binding: FragmentFollowersBinding? = null
+
     private val binding get() = _binding!!
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_followers, container, false)
         _binding = FragmentFollowersBinding.inflate(inflater, container, false)
          return binding.root
 
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     private fun findFollower(username: String?, context: Context?) {
+        binding.progressBar.visibility = View.VISIBLE
 
         val client = ApiConfig.getApiService().getFollowers(username= username!!)
         client.enqueue(object : Callback<List<ItemsItem>> {
@@ -81,17 +79,19 @@ class FollowersFragment : Fragment() {
                 }
             }
             override fun onFailure(call: Call<List<ItemsItem>>, t: Throwable) {
-
+                binding.progressBar.visibility = View.INVISIBLE
             }
         })
     }
 
     private var dataUsers: List<ItemsItem?>? = null
     private fun setUserData(itemUser: List<ItemsItem>, context: Context?) {
+        binding.progressBar.visibility = View.INVISIBLE
         val adapter = ListFollowerAdapter( itemUser, requireContext())
         adapter.submitList(itemUser)
         binding.rvFollower.adapter = adapter
         dataUsers = itemUser
+
     }
 
 
@@ -105,14 +105,9 @@ class FollowersFragment : Fragment() {
         }
 
         findFollower(username, context)
-//        if (position == 1){
-//            binding.textFollower.text= "Get Follower $username"
-//        } else {
-//            binding.textFollower.text = "Get Following $username"
-//        }
-
     }
-
+    private fun showLoading(isLoading: Boolean) {
+    }
 
     companion object {
         const val ARG_POSITION = "app_name"

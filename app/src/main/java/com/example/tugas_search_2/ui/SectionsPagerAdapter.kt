@@ -13,19 +13,25 @@ class SectionsPagerAdapter(activity: AppCompatActivity, private val username: St
 
     var appName: String = "haloo"
 
-
-
-
     override fun getItemCount(): Int {
         return 2
     }
     override fun createFragment(position: Int): Fragment {
-        val fragment = FollowersFragment()
-        fragment.arguments = Bundle().apply {
+        var fragment: Fragment? = null
+        when (position) {
+            0 -> fragment = FollowersFragment()
+            1 -> fragment = FollowingFragment()
+        }
+
+        fragment?.arguments = Bundle().apply {
             putInt(FollowersFragment.ARG_POSITION, position + 1)
             putString(FollowersFragment.ARG_USERNAME, username)
         }
-        return fragment
+        fragment?.arguments = Bundle().apply {
+            putInt(FollowingFragment.ARG_POSITION, position + 1)
+            putString(FollowingFragment.ARG_USERNAME, username)
+        }
+        return fragment as Fragment
     }
     class MyViewHolder(val binding: ItemFollowersBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(review: ItemsItem){
@@ -34,23 +40,7 @@ class SectionsPagerAdapter(activity: AppCompatActivity, private val username: St
                 .load("${review.avatarUrl}")
                 .into(binding.profilFollower)
         }
+
     }
-
-//    override fun createFragment(position: Int): Fragment {
-////        val sectionsPagerAdapter = SectionsPagerAdapter(this)
-////        sectionsPagerAdapter.appName = resources.getString(R.string.app_name)
-//
-////        var fragment: Fragment? = null
-////        when (position) {
-////            0 -> fragment = FollowersFragment()
-////            1 -> fragment = FollowingFragment()
-////        }
-////        return fragment as Fragment
-//
-//
-//    }
-
-
-
 
 }

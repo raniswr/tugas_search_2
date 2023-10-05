@@ -25,7 +25,7 @@ class AkunAdapter(private val dataList: List<ItemsItem?>?, var context : Context
     }
     class MyViewHolder(val binding: ItemReviewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(review: ItemsItem){
-            binding.tvItem.text = "${review.login}\n- ${review.followersUrl}"
+            binding.tvItem.text = "${review.login}"
            Glide.with(binding.image)
                 .load("${review.avatarUrl}")
                 .into(binding.image)

@@ -25,7 +25,7 @@ class ListFollowerAdapter(private val dataList: List<ItemsItem>,var context : Co
     }
     class MyViewHolder(val binding: ItemFollowersBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(review: ItemsItem){
-            binding.namaFollowers.text = "${review.login}\n- ${review.followersUrl}"
+            binding.namaFollowers.text = "${review.login}"
             Glide.with(binding.profilFollower)
                 .load("${review.avatarUrl}")
                 .into(binding.profilFollower)

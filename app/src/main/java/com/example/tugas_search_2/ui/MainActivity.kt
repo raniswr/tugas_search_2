@@ -28,19 +28,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         binding.searchView.setupWithSearchBar(binding.searchBar)
         setContentView(binding.root)
-
         supportActionBar?.hide()
         val layoutManager = LinearLayoutManager(this)
         binding.rvReview.layoutManager = layoutManager
+
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvReview.addItemDecoration(itemDecoration)
-
+        binding?.buttonFavorite?.setOnClickListener {
+            val intent = Intent(this@MainActivity, FavoritePage::class.java)
+            startActivity(intent)
+        }
         findUser("a")
+
 
        fun onQueryTextSubmit(query:String?): Boolean {
             binding.searchView.clearFocus()
@@ -66,8 +69,6 @@ val query = binding.searchView.text.toString()
               onQueryTextSubmit(query)
                 onQueryTextChange(textView.toString())
 
-
-
                 Toast.makeText(this@MainActivity, binding.searchView.text, Toast.LENGTH_SHORT)
                     .show()
 
@@ -76,78 +77,11 @@ val query = binding.searchView.text.toString()
             }
     }
 
-//    private fun findRestaurant() {
-//        showLoading(true)
-//        val client = ApiConfig.getApiService().getRestaurant(RESTAURANT_ID)
-//        client.enqueue(object : Callback<RestaurantResponse>{
-//            override fun onResponse(
-//                call: Call<RestaurantResponse>,
-//                response: Response<RestaurantResponse>
-//            ) {
-//                showLoading(false)
-//                if (response.isSuccessful) {
-//                    val responseBody = response.body()
-//                    if (responseBody != null) {
-//                        setRestaurantData(responseBody.restaurant)
-//                        setReviewData(responseBody.restaurant.customerReviews)
-//                    }
-//                } else {
-//                    Log.e(TAG, "onFailure: ${response.message()}")
-//                }
-//            }
-//            override fun onFailure(call: Call<RestaurantResponse>, t: Throwable) {
-//                showLoading(false)
-//                Log.e(TAG, "onFailure: ${t.message}")
-//            }
-//        })
-//    }
-//
-//    private fun setRestaurantData(restaurant: Restaurant) {
-//        binding.tvTitle.text = restaurant.name
-//        binding.tvDescription.text = restaurant.description
-//        Glide.with(this@MainActivity)
-//
-//    }
-//    private fun setReviewData(consumerReviews: List<CustomerReviewsItem>) {
-//        val adapter = ReviewAdapter()
-//        adapter.submitList(consumerReviews)
-//        binding.rvReview.adapter = adapter
-//        binding.edReview.setText("")
-//    }
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
-    }
 
-//    private fun postReview(review: String) {
-//        showLoading(true)
-//        val client = ApiConfig.getApiService().postReview(RESTAURANT_ID, "Dicoding", review)
-//        client.enqueue(object : Callback<PostReviewResponse> {
-//            override fun onResponse(
-//                call: Call<PostReviewResponse>,
-//                response: Response<PostReviewResponse>
-//            ) {
-//                showLoading(false)
-//                val responseBody = response.body()
-//                if (response.isSuccessful && responseBody != null) {
-//                    setReviewData(responseBody.customerReviews)
-//                } else {
-//                    Log.e(TAG, "onFailure: ${response.message()}")
-//                }
-//            }
-//            override fun onFailure(call: Call<PostReviewResponse>, t: Throwable) {
-//                showLoading(false)
-//                Log.e(TAG, "onFailure: ${t.message}")
-//            }
-//        })
-//    }
-
+    private fun showLoading(isLoading: Boolean) {}
 
     private fun findUser(keyword: String) {
-
+        binding.progressBar.visibility = View.VISIBLE
         val client = ApiConfig.getApiService().getAllUsers(keyword=keyword)
         client.enqueue(object : Callback<SearchResponse>{
             override fun onResponse(
@@ -170,14 +104,17 @@ val query = binding.searchView.text.toString()
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })
+
     }
 
     private var dataUsers: List<ItemsItem?>? = null
     private fun setUserData(itemUser: List<ItemsItem>) {
+        binding.progressBar.visibility = View.INVISIBLE
         val adapter = AkunAdapter(dataUsers,applicationContext)
         adapter.submitList(itemUser)
         binding.rvReview.adapter = adapter
         dataUsers = itemUser
+
 
 
         adapter.onItemClick = {
@@ -185,9 +122,6 @@ val query = binding.searchView.text.toString()
             intent.putExtra("detailUser", Gson().toJson(it))
             startActivity(intent)
         }
-
-
-
     }
     }
 

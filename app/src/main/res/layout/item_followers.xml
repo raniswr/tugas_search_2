@@ -47,6 +47,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/namaFollowers"
             android:textColor="@color/black"
+            android:ellipsize="end"
             android:textSize="16sp"
             android:text="Title"
             android:textStyle="bold"
