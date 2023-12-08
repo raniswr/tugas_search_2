@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tugas_search_2.data.response.ItemsItem
@@ -32,6 +34,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         binding.searchView.setupWithSearchBar(binding.searchBar)
         setContentView(binding.root)
+
+
+        val pref = SettingPreferences.getInstance(application.dataStore)
+        val mainViewModel = ViewModelProvider(this, ViewModelFactoryTheme(pref)).get(
+            ThemeViewModel::class.java
+        )
+        mainViewModel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
+
+
         supportActionBar?.hide()
         val layoutManager = LinearLayoutManager(this)
         binding.rvReview.layoutManager = layoutManager
@@ -42,8 +59,12 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, FavoritePage::class.java)
             startActivity(intent)
         }
-        findUser("a")
+        binding?.buttonTheme?.setOnClickListener {
+            val intent = Intent(this@MainActivity, tema::class.java)
+            startActivity(intent)
+        }
 
+        findUser("a")
 
        fun onQueryTextSubmit(query:String?): Boolean {
             binding.searchView.clearFocus()
@@ -63,9 +84,8 @@ class MainActivity : AppCompatActivity() {
             .editText
             .setOnEditorActionListener { textView, actionId, event ->
                 binding.searchBar.text = binding.searchView.text
-val query = binding.searchView.text.toString()
+                val query = binding.searchView.text.toString()
                 binding.searchView.hide()
-                //todo panggil function untuk mengambil data
               onQueryTextSubmit(query)
                 onQueryTextChange(textView.toString())
 
@@ -79,8 +99,7 @@ val query = binding.searchView.text.toString()
 
 
     private fun showLoading(isLoading: Boolean) {}
-
-    private fun findUser(keyword: String) {
+    private fun findUser(keyword: String){
         binding.progressBar.visibility = View.VISIBLE
         val client = ApiConfig.getApiService().getAllUsers(keyword=keyword)
         client.enqueue(object : Callback<SearchResponse>{
@@ -92,7 +111,6 @@ val query = binding.searchView.text.toString()
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-
                         setUserData(responseBody.items)
                     }
                 } else {
@@ -114,9 +132,6 @@ val query = binding.searchView.text.toString()
         adapter.submitList(itemUser)
         binding.rvReview.adapter = adapter
         dataUsers = itemUser
-
-
-
         adapter.onItemClick = {
             val intent = Intent(this, profile_page::class.java)
             intent.putExtra("detailUser", Gson().toJson(it))

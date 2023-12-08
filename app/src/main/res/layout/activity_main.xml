@@ -24,7 +24,7 @@
 
 
                         <ImageButton
-                            android:id="@+id/buttonThem"
+                            android:id="@+id/buttonTheme"
                             app:srcCompat="@drawable/ic_theme"
                             android:layout_width="48dp"
                             android:layout_height="48dp"

@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.tugas_search_2.data.response.ItemsItem
 import com.example.tugas_search_2.databinding.ItemFollowersBinding
 
-class SectionsPagerAdapter(activity: AppCompatActivity, private val username: String) : FragmentStateAdapter(activity) {
+class SectionsPagerAdapter(activity: AppCompatActivity, private val username: String?) : FragmentStateAdapter(activity) {
 
     var appName: String = "haloo"
 

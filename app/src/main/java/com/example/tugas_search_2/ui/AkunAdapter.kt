@@ -12,6 +12,7 @@ import com.example.tugas_search_2.databinding.ItemReviewBinding
 
 class AkunAdapter(private val dataList: List<ItemsItem?>?, var context : Context): ListAdapter<ItemsItem,AkunAdapter.MyViewHolder>(AkunAdapter.DIFF_CALLBACK) {
     var onItemClick: ((ItemsItem?) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AkunAdapter.MyViewHolder {
         val binding = ItemReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding)

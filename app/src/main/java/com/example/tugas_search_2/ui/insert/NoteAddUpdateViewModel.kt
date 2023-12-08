@@ -16,4 +16,9 @@ class NoteAddUpdateViewModel(application: Application) : ViewModel() {
     fun delete(note: Note) {
         mNoteRepository.delete(note)
     }
+    fun deleteById(idUser: Int) {
+        mNoteRepository.deleteById(idUser)
+    }
+
+
 }

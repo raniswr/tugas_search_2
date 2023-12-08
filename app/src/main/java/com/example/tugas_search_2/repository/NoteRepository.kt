@@ -16,12 +16,23 @@ class NoteRepository(application: Application) {
         mNotesDao = db.noteDao()
     }
     fun getAllNotes(): LiveData<List<Note>> = mNotesDao.getAllNotes()
+    fun getFavoriteUserById(idUser: Int): LiveData<Note> = mNotesDao.getFavoriteUserById(idUser)
+
+    fun getNotebyId(idUser: Int): Note = mNotesDao.getNoteById(idUser)
+ fun delete(note: Note) {
+        mNotesDao.delete(note)
+    }
+    fun deleteById(idUser: Int) {
+        executorService.execute { mNotesDao.deleteById(idUser) }
+
+    }
+
+
+
     fun insert(note: Note) {
         executorService.execute { mNotesDao.insert(note) }
     }
-    fun delete(note: Note) {
-        executorService.execute { mNotesDao.delete(note) }
-    }
+
     fun update(note: Note) {
         executorService.execute { mNotesDao.update(note) }
     }
